@@ -1,0 +1,70 @@
+
+@mixin fontFace($font_family, $font_weight, $font_style, $font_name, $font_type, $fonts_path: '../fonts', $font_version: '1.0.0') {
+  @font-face {
+    font-family: '#{$font_family}';
+    font-style: $font_style;
+    font-weight: $font_weight;
+    font-display: swap;
+    src: url('#{$fonts_path}/#{$font_name}-#{$font_type}.woff2?v=#{$font_version}') format('woff2'),
+    url('#{$fonts_path}/#{$font_name}-#{$font_type}.woff?v=#{$font_version}') format('woff');
+  }
+}
+
+@mixin background-2x($path, $ext: 'png', $pos: left top, $size: cover, $repeat: no-repeat, $color: inherit) {
+  $at1x_path: '#{$path}.#{$ext}';
+  $at2x_path: '#{$path}@2x.#{$ext}';
+
+  background-color: $color;
+  background-image: url('#{$at1x_path}');
+  background-repeat: $repeat;
+  background-position: $pos;
+  background-size: $size;
+
+  @media all and (-webkit-min-device-pixel-ratio : 1.5),
+  all and (-o-min-device-pixel-ratio: 3/2),
+  all and (min--moz-device-pixel-ratio: 1.5),
+  all and (min-device-pixel-ratio: 1.5) {
+    background-image: url('#{$at2x_path}');
+  }
+}
+
+@mixin up($up-breakpoint, $up-breakpoints: $breakpoints) {
+  @if map-has-key($up-breakpoints, $up-breakpoint) {
+    $up-breakpoint: map-get($up-breakpoints, $up-breakpoint);
+  }
+
+  @media (min-width: #{$up-breakpoint + 'px'}) {
+    @content;
+  }
+}
+
+@mixin down($down-breakpoint, $down-breakpoints: $breakpoints) {
+  @if map-has-key($down-breakpoints, $down-breakpoint) {
+    $down-breakpoint: map-get($down-breakpoints, $down-breakpoint);
+  }
+
+  @media (max-width: #{$down-breakpoint - 1 + 'px'}) {
+    @content;
+  }
+}
+
+@mixin between($lower, $upper) {
+  @if map-has-key($breakpoints, $lower) and map-has-key($breakpoints, $upper) {
+    $lower-breakpoint: map-get($breakpoints, $lower);
+    $upper-breakpoint: map-get($breakpoints, $upper);
+
+    @media (min-width: $lower-breakpoint + 'px') and (max-width: ($upper-breakpoint - 1 + 'px')) {
+      @content;
+    }
+  }
+
+  @else {
+    @if (map-has-key($breakpoints, $lower) == false) {
+      @warn 'Your lower breakpoint was invalid: #{$lower}.';
+    }
+
+    @if (map-has-key($breakpoints, $upper) == false) {
+      @warn 'Your upper breakpoint was invalid: #{$upper}.';
+    }
+  }
+}

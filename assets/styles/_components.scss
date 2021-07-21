@@ -1,0 +1,19 @@
+@import 'variables';
+
+blockquote {
+  padding: 2rem;
+  background: $c-gray;
+}
+
+table {
+  margin-bottom: 1rem;
+  border-collapse: collapse;
+
+  td,
+  th {
+    padding: 2rem;
+    font-size: inherit;
+    text-align: left;
+    border: 1px solid #EEE;
+  }
+}
